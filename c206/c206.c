@@ -95,16 +95,19 @@ void DLL_Init( DLList *list ) {
  * @param list Ukazatel na inicializovanou strukturu dvousměrně vázaného seznamu
  */
 void DLL_Dispose( DLList *list ) {
-    DLLElementPtr tmp = list->firstElement;
-    while(tmp->nextElement != NULL)
+    if(list->firstElement != NULL)
     {
-        tmp = tmp->nextElement;
-        free(tmp->previousElement);
+        DLLElementPtr tmp = list->firstElement;
+        while(tmp->nextElement != NULL)
+        {
+            tmp = tmp->nextElement;
+            free(tmp->previousElement);
+        }
+        free(tmp);
+        list->firstElement = NULL;
+        list->activeElement = list->firstElement;
+        list->lastElement = list->firstElement;
     }
-    free(tmp);
-    list->firstElement = NULL;
-    list->activeElement = list->firstElement;
-    list->lastElement = list->firstElement;
 }
 
 /**
@@ -364,7 +367,7 @@ void DLL_InsertBefore( DLList *list, int data ) {
  * @param dataPtr Ukazatel na cílovou proměnnou
  */
 void DLL_GetValue( DLList *list, int *dataPtr ) {
-    if(list->activeElement == NULL)
+    if(list->activeElement == NULL || list->firstElement == NULL)
         DLL_Error();
     else
         *dataPtr = list->activeElement->data;
