@@ -59,6 +59,11 @@ void untilLeftPar( Stack *stack, char *postfixExpression, unsigned *postfixExpre
     while(Stack_IsEmpty(stack) == 0)
     {
         postfixExpression[(*postfixExpressionLength)++] = stack->array[i];
+        if(stack->array[stack->topIndex] == '(')
+        {
+            Stack_Pop(stack);
+            break;
+        }
         Stack_Pop(stack);
     }
 }
@@ -86,8 +91,6 @@ int precedence(char ch)
         return 1;
     if(ch == '*' || ch == '/')
         return 2;
-    if(ch == '^')
-        return 3;
     else
         return 0;
 }
@@ -97,11 +100,13 @@ void doOperation( Stack *stack, char c, char *postfixExpression, unsigned *postf
     {
         Stack_Push(stack, c);
     }
-    else
+    else        //duplikuje niektore operandy inak je ok
     {
         if(precedence(stack->array[stack->topIndex]) >= precedence(c))
         {
-            postfixExpression[(*postfixExpressionLength)++] = c;
+            postfixExpression[(*postfixExpressionLength)++] = stack->array[stack->topIndex];
+            Stack_Pop(stack);
+            doOperation(stack, c, postfixExpression, postfixExpressionLength);
         }
         else                                                                    //operand s nizsou prioritou
         {
@@ -159,9 +164,35 @@ void doOperation( Stack *stack, char c, char *postfixExpression, unsigned *postf
  * @returns Znakový řetězec obsahující výsledný postfixový výraz
  */
 char *infix2postfix( const char *infixExpression ) {
+    char *postfixExpr = malloc(MAX_LEN);
+    if(postfixExpr == NULL)
+        return NULL;
+    int i = 0;
+    char c;
+    Stack stack;
+    unsigned len = 0;
+    Stack_Init(&stack);
 
-    solved = FALSE; /* V případě řešení smažte tento řádek! */
-    return NULL; /* V případě řešení můžete smazat tento řádek. */
+    while(infixExpression[i] != '\0')
+    {
+        c = infixExpression[i++];
+        if(c == '+' || c == '-' || c == '*' || c == '/')
+            doOperation(&stack, c, postfixExpr, &len);
+        else if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+            postfixExpr[len++] = c;
+        else if(c == '(')
+            Stack_Push(&stack, c);
+        else if(c == ')')
+            untilLeftPar(&stack, postfixExpr, &len);
+        else if(c == '=')
+        {
+            untilLeftPar(&stack, postfixExpr, &len);
+            postfixExpr[len++] = c;
+            postfixExpr[len] = '\0';
+            return postfixExpr;
+        }
+    }
+    return NULL;
 }
 
 /* Konec c204.c */
