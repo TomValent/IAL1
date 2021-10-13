@@ -29,7 +29,7 @@
 ** Terminologická poznámka: Jazyk C nepoužívá pojem procedura.
 ** Proto zde používáme pojem funkce i pro operace, které by byly
 ** v algoritmickém jazyce Pascalovského typu implemenovány jako procedury
-** (v jazyce C procedurám odpovídají funkce vracející typ void).
+** (v jazyce C procedurám odpovídají funkce vracející typ void)
 **
 **/
 
