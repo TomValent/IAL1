@@ -100,7 +100,7 @@ void doOperation( Stack *stack, char c, char *postfixExpression, unsigned *postf
     {
         Stack_Push(stack, c);
     }
-    else        //duplikuje niektore operandy inak je ok
+    else
     {
         if(precedence(stack->array[stack->topIndex]) >= precedence(c))
         {
