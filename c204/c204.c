@@ -96,6 +96,7 @@ int precedence(char ch)
         return 0;
 }
 
+
 void doOperation( Stack *stack, char c, char *postfixExpression, unsigned *postfixExpressionLength ) {
     if(Stack_IsEmpty(stack) == -1 || stack->array[stack->topIndex] == '(')      //[razdny zasobnik alebo lava zatvorka
     {
@@ -167,7 +168,11 @@ void doOperation( Stack *stack, char c, char *postfixExpression, unsigned *postf
 char *infix2postfix( const char *infixExpression ) {
     char *postfixExpr = malloc(MAX_LEN);
     if(postfixExpr == NULL)
+    {
+        free(postfixExpr);
         return NULL;
+    }
+
     int i = 0;
     char c;
     Stack stack;
@@ -193,6 +198,7 @@ char *infix2postfix( const char *infixExpression ) {
             return postfixExpr;
         }
     }
+    free(postfixExpr);
     return NULL;
 }
 
