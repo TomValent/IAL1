@@ -58,6 +58,7 @@ void untilLeftPar( Stack *stack, char *postfixExpression, unsigned *postfixExpre
     int i = stack->topIndex;
     while(Stack_IsEmpty(stack) == 0)
     {
+        Stack_Pop(stack);
         postfixExpression[(*postfixExpressionLength)++] = stack->array[i];
         if(stack->array[stack->topIndex] == '(')
         {
